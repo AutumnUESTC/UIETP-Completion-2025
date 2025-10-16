@@ -160,11 +160,18 @@ class TrainingConfig:
         
         # 实验变量配置
         self.use_feature_engineering = False
-        self.use_improved_loss = False 
-        self.use_contrastive_pretrain = True  
+        self.use_contrastive_pretrain = True  # 对比学习预训练开关
         
-        self.feature_fusion_start_epoch = 50
-        self.feature_fusion_warmup = 20
+        # 损失函数配置 - 简化为传统开关
+        self.dice_loss = True      # 开启Dice Loss
+        self.focal_loss = True     # 开启Focal Loss
+        
+        # 改进版参数（仅当dice_loss和focal_loss都为True时生效）
+        self.improved_alpha = 0.3  # Dice vs Focal平衡参数
+        self.improved_gamma = 2.0  # Focal Loss聚焦参数
+        
+        self.cls_weights = np.ones([self.num_classes], np.float32)
+        self.aux_branch = False
         
         # 优化器配置
         self.init_lr = 1e-4
@@ -192,12 +199,6 @@ class TrainingConfig:
         self.eval_period = 10
         self.vocdevkit_path = '/home/wuyou/pspnet-pytorch/VOCdevkit/VOC2007'
         
-        # 损失函数配置
-        self.dice_loss = True 
-        self.focal_loss = True  
-        self.cls_weights = np.ones([self.num_classes], np.float32)
-        self.aux_branch = False
-        
         # 数据加载配置
         self.num_workers = max(4, min(16, os.cpu_count()//2))
         self.pin_memory = True
@@ -207,13 +208,17 @@ class TrainingConfig:
         """验证配置是否正确设置"""
         print(f"\n配置验证结果:")
         print(f"  对比学习预训练: {'✅ 开启' if self.use_contrastive_pretrain else '❌ 关闭'}")
-        print(f"  特征工程: {'✅ 开启' if self.use_feature_engineering else '❌ 关闭'}")
-        print(f"  改进损失: {'✅ 开启' if self.use_improved_loss else '❌ 关闭'}")
         print(f"  Dice损失: {'✅ 开启' if self.dice_loss else '❌ 关闭'}")
         print(f"  Focal损失: {'✅ 开启' if self.focal_loss else '❌ 关闭'}")
         
-        if self.use_improved_loss:
-            print("ℹ️  使用改进损失函数，将忽略dice_loss和focal_loss的单独设置")
+        if self.dice_loss and self.focal_loss:
+            print(f"  损失函数组合: ✅ 改进版DiceFocal (alpha={self.improved_alpha}, gamma={self.improved_gamma})")
+        elif self.dice_loss:
+            print(f"  损失函数组合:  纯Dice损失")
+        elif self.focal_loss:
+            print(f"  损失函数组合:  纯Focal损失")  
+        else:
+            print(f"  损失函数组合:  交叉熵损失")
 
     def check_and_download_weights(self):
         """检查并下载缺失的权重文件"""
@@ -250,10 +255,8 @@ class TrainingConfig:
         
         backbone_name = backbone_map.get(self.backbone_type, f"backbone_{self.backbone_type}")
         
-        if self.use_improved_loss:
-            loss_name = "improved_loss"
-        elif self.dice_loss and self.focal_loss:
-            loss_name = "dice_focal"
+        if self.dice_loss and self.focal_loss:
+            loss_name = f"improved_alpha{self.improved_alpha}_gamma{self.improved_gamma}"
         elif self.dice_loss:
             loss_name = "dice"
         elif self.focal_loss:
@@ -701,90 +704,99 @@ def enhanced_pspnet_dataset_collate(batch):
 
 # ==================== 损失函数 ====================
 class ImprovedDiceFocalLoss(nn.Module):
-    """改进的Dice Focal Loss"""
-    def __init__(self, alpha=0.65, gamma=2.5, smooth=1e-6, class_weights=None):
+    """改进的Dice Focal Loss - 简化版本"""
+    def __init__(self, alpha=0.5, gamma=2.0, smooth=1e-6, class_weights=None):
         super().__init__()
-        self.alpha = alpha
-        self.gamma = gamma
+        self.alpha = alpha      # Dice权重
+        self.gamma = gamma      # Focal聚焦参数  
         self.smooth = smooth
         self.class_weights = class_weights
 
     def forward(self, pred, target):
-        if pred.shape[1] != target.max() + 1:
-            pred = F.softmax(pred, dim=1)
+        # Dice Loss部分
+        n, c, h, w = pred.size()
+        nt, ht, wt = target.size()
         
-        num_classes = pred.shape[1]
-        dice_loss = 0.0
-        valid_classes = 0
-        
-        for cls in range(num_classes):
-            pred_cls = pred[:, cls, ...]
-            target_cls = (target == cls).float()
+        if h != ht and w != wt:
+            pred = F.interpolate(pred, size=(ht, wt), mode="bilinear", align_corners=True)
             
-            if target_cls.sum() == 0:
-                if pred_cls.sum() == 0:
-                    continue
-                else:
-                    dice_loss += (pred_cls ** 2).mean()
-                valid_classes += 1
-                continue
-                
-            intersection = (pred_cls * target_cls).sum()
-            union = pred_cls.sum() + target_cls.sum()
-            
-            dice_score = (2. * intersection + self.smooth) / (union + self.smooth)
-            dice_loss += 1 - dice_score
-            valid_classes += 1
+        temp_inputs = torch.softmax(pred.transpose(1, 2).transpose(2, 3).contiguous().view(n, -1, c), -1)
+        temp_target = F.one_hot(target, num_classes=c).view(n, -1, c)
         
-        if valid_classes > 0:
-            dice_loss /= valid_classes
-        else:
-            dice_loss = torch.tensor(0.0).to(pred.device)
-
-        ce_loss = F.cross_entropy(pred, target, reduction='none', weight=self.class_weights)
+        tp = torch.sum(temp_target * temp_inputs, axis=[0,1])
+        fp = torch.sum(temp_inputs, axis=[0,1]) - tp
+        fn = torch.sum(temp_target, axis=[0,1]) - tp
+        
+        score = ((1 + 1 ** 2) * tp + self.smooth) / ((1 + 1 ** 2) * tp + 1 ** 2 * fn + fp + self.smooth)
+        dice_loss = 1 - torch.mean(score)
+        
+        # Focal Loss部分
+        temp_inputs_flat = pred.transpose(1, 2).transpose(2, 3).contiguous().view(-1, c)
+        temp_target_flat = target.view(-1)
+        
+        ce_loss = F.cross_entropy(temp_inputs_flat, temp_target_flat, 
+                                weight=self.class_weights, reduction='none')
         pt = torch.exp(-ce_loss)
         focal_loss = ((1 - pt) ** self.gamma * ce_loss).mean()
-
+        
+        # 组合
         return self.alpha * dice_loss + (1 - self.alpha) * focal_loss
 
 
 def calculate_loss(outputs, targets, seg_labels, weights, config):
-    """统一的损失函数计算器"""
-    if config.use_improved_loss:
+    """统一的损失函数计算器 - 重构版本"""
+    
+    # 根据开关选择损失函数类型
+    if config.dice_loss and config.focal_loss:
+        # 使用改进版DiceFocal损失
         loss_fn = ImprovedDiceFocalLoss(
-            alpha=0.65, 
-            gamma=2.5, 
+            alpha=config.improved_alpha, 
+            gamma=config.improved_gamma, 
             class_weights=weights
         )
         loss = loss_fn(outputs, targets)
-        loss_details = {"total": loss.item(), "type": "improved_dice_focal"}
-    else:
-        if config.focal_loss:
-            loss = Focal_Loss(outputs, targets, weights, num_classes=config.num_classes)
-            loss_type = "focal"
-        else:
-            loss = CE_Loss(outputs, targets, weights, num_classes=config.num_classes)
-            loss_type = "ce"
-        
         loss_details = {
-            "total": loss.item(),
-            "type": loss_type,
-            "components": {loss_type: loss.item()}
+            "total": loss.item(), 
+            "type": f"improved_dice_focal(α={config.improved_alpha},γ={config.improved_gamma})",
+            "components": {
+                "dice": (config.improved_alpha * loss.item()),
+                "focal": ((1 - config.improved_alpha) * loss.item())
+            }
         }
         
-        if config.dice_loss:
-            dice_loss_val = Dice_loss(outputs, seg_labels)
-            loss += dice_loss_val
-            loss_details["components"]["dice"] = dice_loss_val.item()
-            loss_details["type"] += "_dice"
+    elif config.dice_loss:
+        # 纯Dice损失
+        loss = Dice_loss(outputs, seg_labels)
+        loss_details = {
+            "total": loss.item(),
+            "type": "dice_only",
+            "components": {"dice": loss.item()}
+        }
+        
+    elif config.focal_loss:
+        # 纯Focal损失
+        loss = Focal_Loss(outputs, targets, weights, num_classes=config.num_classes)
+        loss_details = {
+            "total": loss.item(), 
+            "type": "focal_only",
+            "components": {"focal": loss.item()}
+        }
+        
+    else:
+        # 交叉熵损失
+        loss = CE_Loss(outputs, targets, weights, num_classes=config.num_classes)
+        loss_details = {
+            "total": loss.item(),
+            "type": "cross_entropy", 
+            "components": {"ce": loss.item()}
+        }
     
     return loss, loss_details
 
 
 # ==================== 训练函数 ====================
 def fit_one_epoch_with_features(model_train, model, loss_history, eval_callback, optimizer, ema_train, ema, epoch, 
-                              epoch_step, epoch_step_val, gen, gen_val, unfreeze_epoch, cuda, dice_loss, focal_loss, 
-                              cls_weights, aux_branch, num_classes, fp16, scaler, save_period, save_dir, distributed, local_rank,
+                              epoch_step, epoch_step_val, gen, gen_val, unfreeze_epoch, cuda, cls_weights, aux_branch, num_classes, fp16, scaler, save_period, save_dir, distributed, local_rank,
                               use_feature_engineering=False, fusion_weight=1.0, config=None):
     """支持特征工程的训练函数 - 修复设备问题"""
     
@@ -1535,8 +1547,7 @@ class PSPNetTrainer:
             fit_one_epoch_with_features(
                 model_train, self.model, self.loss_history, self.eval_callback, self.optimizer, 
                 self.config.ema_train, None, epoch, epoch_step, epoch_step_val, gen, gen_val, 
-                self.config.unfreeze_epoch, self.config.cuda, self.config.dice_loss, self.config.focal_loss,
-                self.config.cls_weights, self.config.aux_branch, self.config.num_classes, 
+                self.config.unfreeze_epoch, self.config.cuda, self.config.cls_weights, self.config.aux_branch, self.config.num_classes, 
                 self.config.fp16, scaler, self.config.save_period, self.experiment_manager.get_experiment_weight_dir(), 
                 self.config.distributed, self.config.local_rank,
                 use_feature_engineering=self.config.use_feature_engineering,
@@ -1563,10 +1574,11 @@ class PSPNetTrainer:
         print(f"配置调试信息")
         print(f"{'='*80}")
         print(f"use_contrastive_pretrain: {self.config.use_contrastive_pretrain}")
-        print(f"use_feature_engineering: {self.config.use_feature_engineering}") 
-        print(f"use_improved_loss: {self.config.use_improved_loss}")
         print(f"dice_loss: {self.config.dice_loss}")
         print(f"focal_loss: {self.config.focal_loss}")
+
+        if self.config.dice_loss and self.config.focal_loss:
+            print(f"改进版参数: alpha={self.config.improved_alpha}, gamma={self.config.improved_gamma}")
         print(f"{'='*80}\n")
         
         if self.config.local_rank == 0:
@@ -1602,14 +1614,12 @@ class PSPNetTrainer:
                 7: "shufflenet_v1", 8: "shufflenet_v2", 9: "efficientnet_v2"
             }
             
-            if self.config.use_improved_loss:
-                loss_name = "改进损失"
-            elif self.config.dice_loss and self.config.focal_loss:
-                loss_name = "Dice+Focal损失"
+            if self.config.dice_loss and self.config.focal_loss:
+                loss_name = f"改进版DiceFocal(α={self.config.improved_alpha},γ={self.config.improved_gamma})"
             elif self.config.dice_loss:
-                loss_name = "Dice损失"
+                loss_name = "纯Dice损失"
             elif self.config.focal_loss:
-                loss_name = "Focal损失"
+                loss_name = "纯Focal损失"
             else:
                 loss_name = "交叉熵损失"
                 
@@ -1622,7 +1632,6 @@ class PSPNetTrainer:
             print(f"  损失函数: {loss_name}")
             print(f"  对比学习: {'✅ 使用' if self.config.use_contrastive_pretrain else '❌ 未使用'}")
             print(f"  特征工程: {'✅ 使用' if self.config.use_feature_engineering else '❌ 未使用'}")
-            print(f"  改进损失: {'✅ 使用' if self.config.use_improved_loss else '❌ 未使用'}")
             
             if self.config.use_contrastive_pretrain:
                 print(f"对比学习配置:")
@@ -1698,12 +1707,12 @@ if __name__ == "__main__":
     parser.add_argument('--no-contrastive', action='store_true', default=None, help='不使用对比学习')
     parser.add_argument('--feature', action='store_true', default=None, help='使用特征工程')
     parser.add_argument('--no-feature', action='store_true', default=None, help='不使用特征工程')
-    parser.add_argument('--improved_loss', action='store_true', default=None, help='使用改进损失函数')
-    parser.add_argument('--no-improved_loss', action='store_true', default=None, help='不使用改进损失函数')
     parser.add_argument('--dice_loss', action='store_true', default=None, help='使用Dice损失')
     parser.add_argument('--no-dice_loss', action='store_true', default=None, help='不使用Dice损失')
     parser.add_argument('--focal_loss', action='store_true', default=None, help='使用Focal损失')
     parser.add_argument('--no-focal_loss', action='store_true', default=None, help='不使用Focal损失')
+    parser.add_argument('--improved_alpha', type=float, default=None, help='改进版alpha参数')
+    parser.add_argument('--improved_gamma', type=float, default=None, help='改进版gamma参数')
     
     args = parser.parse_args()
     
@@ -1722,11 +1731,6 @@ if __name__ == "__main__":
     elif args.no_feature is not None:
         config_dict["use_feature_engineering"] = False
     
-    if args.improved_loss is not None:
-        config_dict["use_improved_loss"] = True
-    elif args.no_improved_loss is not None:
-        config_dict["use_improved_loss"] = False
-    
     if args.dice_loss is not None:
         config_dict["dice_loss"] = True
     elif args.no_dice_loss is not None:
@@ -1736,6 +1740,12 @@ if __name__ == "__main__":
         config_dict["focal_loss"] = True
     elif args.no_focal_loss is not None:
         config_dict["focal_loss"] = False
+    
+    if args.improved_alpha is not None:
+        config_dict["improved_alpha"] = args.improved_alpha
+    
+    if args.improved_gamma is not None:
+        config_dict["improved_gamma"] = args.improved_gamma
     
     print(f"\n最终配置:")
     for key, value in config_dict.items():
@@ -1772,14 +1782,11 @@ def create_experiment_combinations():
     backbones = [0, 1, 2, 3]
     
     experiment_variables = [
-        {"use_contrastive_pretrain": False, "use_feature_engineering": False, "use_improved_loss": False, "dice_loss": True, "focal_loss": True},
-        {"use_contrastive_pretrain": True, "use_feature_engineering": False, "use_improved_loss": False, "dice_loss": True, "focal_loss": True},
-        {"use_contrastive_pretrain": False, "use_feature_engineering": True, "use_improved_loss": False, "dice_loss": True, "focal_loss": True},
-        {"use_contrastive_pretrain": False, "use_feature_engineering": False, "use_improved_loss": True, "dice_loss": False, "focal_loss": False},
-        {"use_contrastive_pretrain": True, "use_feature_engineering": True, "use_improved_loss": False, "dice_loss": True, "focal_loss": True},
-        {"use_contrastive_pretrain": True, "use_feature_engineering": False, "use_improved_loss": True, "dice_loss": False, "focal_loss": False},
-        {"use_contrastive_pretrain": False, "use_feature_engineering": True, "use_improved_loss": True, "dice_loss": False, "focal_loss": False},
-        {"use_contrastive_pretrain": True, "use_feature_engineering": True, "use_improved_loss": True, "dice_loss": False, "focal_loss": False},
+        {"dice_loss": True, "focal_loss": True, "improved_alpha": 0.5, "improved_gamma": 2.0},
+        {"dice_loss": True, "focal_loss": False},
+        {"dice_loss": False, "focal_loss": True},
+        {"dice_loss": True, "focal_loss": True, "improved_alpha": 0.3, "improved_gamma": 2.5},
+        {"dice_loss": True, "focal_loss": True, "improved_alpha": 0.7, "improved_gamma": 1.5},
     ]
     
     for backbone in backbones:
@@ -1791,21 +1798,19 @@ def create_experiment_combinations():
             
             backbone_names = {0: "mobilenet", 1: "resnet50", 2: "resnet101", 3: "efficientnet"}
             
-            contrastive_name = "contrast" if exp_vars["use_contrastive_pretrain"] else "no_contrast"
-            feature_name = "feature" if exp_vars["use_feature_engineering"] else "no_feature"
-            
-            if exp_vars["use_improved_loss"]:
-                improved_name = "improved"
-            elif exp_vars["dice_loss"] and exp_vars["focal_loss"]:
-                improved_name = "dice_focal"
+            if exp_vars["dice_loss"] and exp_vars["focal_loss"]:
+                if "improved_alpha" in exp_vars:
+                    loss_name = f"improved_a{exp_vars['improved_alpha']}_g{exp_vars['improved_gamma']}"
+                else:
+                    loss_name = "dice_focal"
             elif exp_vars["dice_loss"]:
-                improved_name = "dice"
+                loss_name = "dice"
             elif exp_vars["focal_loss"]:
-                improved_name = "focal"
+                loss_name = "focal"
             else:
-                improved_name = "ce"
+                loss_name = "ce"
             
-            exp_name = f"{backbone_names[backbone]}_{contrastive_name}_{feature_name}_{improved_name}"
+            exp_name = f"{backbone_names[backbone]}_{loss_name}"
             
             experiments.append((exp_config, exp_name))
     
