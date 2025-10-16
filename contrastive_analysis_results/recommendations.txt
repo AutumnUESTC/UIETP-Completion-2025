@@ -3,66 +3,433 @@
 
 推荐顺序 (从最佳到最差):
 
-1. Epoch 20: contrastive_pretrained_backbone_epoch20.pth
-   标准差: 0.460350
-   均值: -0.001428
-   加载参数: 313
-   文件路径: /home/wuyou/pspnet-pytorch/logs/contrastive_pretrained_backbone_epoch20.pth
+1. Epoch 1: contrastive_pretrained_backbone_epoch1.pth
+   质量分数: 0.995
+   标准差: 0.019088
+   均值: -0.000492
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch1.pth
 
-2. Epoch 80: contrastive_pretrained_backbone_epoch80.pth
-   标准差: 0.866364
-   均值: -0.000371
-   加载参数: 313
-   文件路径: /home/wuyou/pspnet-pytorch/logs/contrastive_pretrained_backbone_epoch80.pth
+2. Epoch 2: contrastive_pretrained_backbone_epoch2.pth
+   质量分数: 0.995
+   标准差: 0.019097
+   均值: -0.000492
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch2.pth
 
-3. Epoch 100: contrastive_pretrained_backbone_epoch100.pth
-   标准差: 0.868650
-   均值: -0.000386
-   加载参数: 313
-   文件路径: /home/wuyou/pspnet-pytorch/logs/contrastive_pretrained_backbone_epoch100.pth
+3. Epoch 3: contrastive_pretrained_backbone_epoch3.pth
+   质量分数: 0.995
+   标准差: 0.019107
+   均值: -0.000496
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch3.pth
 
-4. Epoch 40: contrastive_pretrained_backbone_epoch40.pth
-   标准差: 0.888340
-   均值: 0.000079
-   加载参数: 313
-   文件路径: /home/wuyou/pspnet-pytorch/logs/contrastive_pretrained_backbone_epoch40.pth
+4. Epoch 4: contrastive_pretrained_backbone_epoch4.pth
+   质量分数: 0.995
+   标准差: 0.019126
+   均值: -0.000500
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch4.pth
 
-5. Epoch 60: contrastive_pretrained_backbone_epoch60.pth
-   标准差: 0.911379
-   均值: -0.000119
-   加载参数: 313
-   文件路径: /home/wuyou/pspnet-pytorch/logs/contrastive_pretrained_backbone_epoch60.pth
+5. Epoch 5: contrastive_pretrained_backbone_epoch5.pth
+   质量分数: 0.995
+   标准差: 0.019125
+   均值: -0.000500
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch5.pth
 
-6. Epoch 120: contrastive_pretrained_backbone_epoch120.pth
-   标准差: 1.167324
-   均值: 0.001336
-   加载参数: 313
-   文件路径: /home/wuyou/pspnet-pytorch/logs/contrastive_pretrained_backbone_epoch120.pth
+6. Epoch 7: contrastive_pretrained_backbone_epoch7.pth
+   质量分数: 0.995
+   标准差: 0.019131
+   均值: -0.000502
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch7.pth
 
-7. Epoch 140: contrastive_pretrained_backbone_epoch140.pth
-   标准差: 1.455448
-   均值: 0.003309
-   加载参数: 313
-   文件路径: /home/wuyou/pspnet-pytorch/logs/contrastive_pretrained_backbone_epoch140.pth
+7. Epoch 10: contrastive_pretrained_backbone_epoch10.pth
+   质量分数: 0.995
+   标准差: 0.019136
+   均值: -0.000504
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch10.pth
 
-8. Epoch 160: contrastive_pretrained_backbone_epoch160.pth
-   标准差: 1.613336
-   均值: 0.004774
-   加载参数: 313
-   文件路径: /home/wuyou/pspnet-pytorch/logs/contrastive_pretrained_backbone_epoch160.pth
+8. Epoch 9: contrastive_pretrained_backbone_epoch9.pth
+   质量分数: 0.995
+   标准差: 0.019149
+   均值: -0.000504
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch9.pth
 
-9. Epoch 180: contrastive_pretrained_backbone_epoch180.pth
-   标准差: 1.702301
-   均值: 0.006067
-   加载参数: 313
-   文件路径: /home/wuyou/pspnet-pytorch/logs/contrastive_pretrained_backbone_epoch180.pth
+9. Epoch 8: contrastive_pretrained_backbone_epoch8.pth
+   质量分数: 0.995
+   标准差: 0.019159
+   均值: -0.000503
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch8.pth
 
-10. Epoch 200: contrastive_pretrained_backbone_epoch200.pth
-   标准差: 1.707838
-   均值: 0.006262
-   加载参数: 313
-   文件路径: /home/wuyou/pspnet-pytorch/logs/contrastive_pretrained_backbone_epoch200.pth
+10. Epoch 14: contrastive_pretrained_backbone_epoch14.pth
+   质量分数: 0.995
+   标准差: 0.019157
+   均值: -0.000511
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch14.pth
+
+11. Epoch 15: contrastive_pretrained_backbone_epoch15.pth
+   质量分数: 0.995
+   标准差: 0.019159
+   均值: -0.000510
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch15.pth
+
+12. Epoch 12: contrastive_pretrained_backbone_epoch12.pth
+   质量分数: 0.995
+   标准差: 0.019164
+   均值: -0.000505
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch12.pth
+
+13. Epoch 18: contrastive_pretrained_backbone_epoch18.pth
+   质量分数: 0.995
+   标准差: 0.019171
+   均值: -0.000512
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch18.pth
+
+14. Epoch 17: contrastive_pretrained_backbone_epoch17.pth
+   质量分数: 0.995
+   标准差: 0.019173
+   均值: -0.000510
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch17.pth
+
+15. Epoch 22: contrastive_pretrained_backbone_epoch22.pth
+   质量分数: 0.995
+   标准差: 0.019179
+   均值: -0.000508
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch22.pth
+
+16. Epoch 16: contrastive_pretrained_backbone_epoch16.pth
+   质量分数: 0.995
+   标准差: 0.019183
+   均值: -0.000510
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch16.pth
+
+17. Epoch 20: contrastive_pretrained_backbone_epoch20.pth
+   质量分数: 0.995
+   标准差: 0.019188
+   均值: -0.000508
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch20.pth
+
+18. Epoch 24: contrastive_pretrained_backbone_epoch24.pth
+   质量分数: 0.995
+   标准差: 0.019198
+   均值: -0.000510
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch24.pth
+
+19. Epoch 29: contrastive_pretrained_backbone_epoch29.pth
+   质量分数: 0.995
+   标准差: 0.019209
+   均值: -0.000510
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch29.pth
+
+20. Epoch 26: contrastive_pretrained_backbone_epoch26.pth
+   质量分数: 0.995
+   标准差: 0.019213
+   均值: -0.000510
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch26.pth
+
+21. Epoch 27: contrastive_pretrained_backbone_epoch27.pth
+   质量分数: 0.995
+   标准差: 0.019212
+   均值: -0.000512
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch27.pth
+
+22. Epoch 30: contrastive_pretrained_backbone_epoch30.pth
+   质量分数: 0.995
+   标准差: 0.019226
+   均值: -0.000510
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch30.pth
+
+23. Epoch 31: contrastive_pretrained_backbone_epoch31.pth
+   质量分数: 0.995
+   标准差: 0.019238
+   均值: -0.000510
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch31.pth
+
+24. Epoch 37: contrastive_pretrained_backbone_epoch37.pth
+   质量分数: 0.995
+   标准差: 0.019251
+   均值: -0.000506
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch37.pth
+
+25. Epoch 34: contrastive_pretrained_backbone_epoch34.pth
+   质量分数: 0.995
+   标准差: 0.019256
+   均值: -0.000507
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch34.pth
+
+26. Epoch 38: contrastive_pretrained_backbone_epoch38.pth
+   质量分数: 0.995
+   标准差: 0.019260
+   均值: -0.000505
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch38.pth
+
+27. Epoch 42: contrastive_pretrained_backbone_epoch42.pth
+   质量分数: 0.995
+   标准差: 0.019280
+   均值: -0.000505
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch42.pth
+
+28. Epoch 45: contrastive_pretrained_backbone_epoch45.pth
+   质量分数: 0.995
+   标准差: 0.019298
+   均值: -0.000506
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch45.pth
+
+29. Epoch 47: contrastive_pretrained_backbone_epoch47.pth
+   质量分数: 0.995
+   标准差: 0.019300
+   均值: -0.000505
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch47.pth
+
+30. Epoch 49: contrastive_pretrained_backbone_epoch49.pth
+   质量分数: 0.995
+   标准差: 0.019317
+   均值: -0.000502
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch49.pth
+
+31. Epoch 64: contrastive_pretrained_backbone_epoch64.pth
+   质量分数: 0.995
+   标准差: 0.019335
+   均值: -0.000500
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch64.pth
+
+32. Epoch 54: contrastive_pretrained_backbone_epoch54.pth
+   质量分数: 0.995
+   标准差: 0.019336
+   均值: -0.000504
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch54.pth
+
+33. Epoch 59: contrastive_pretrained_backbone_epoch59.pth
+   质量分数: 0.995
+   标准差: 0.019343
+   均值: -0.000499
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch59.pth
+
+34. Epoch 65: contrastive_pretrained_backbone_epoch65.pth
+   质量分数: 0.995
+   标准差: 0.019351
+   均值: -0.000499
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch65.pth
+
+35. Epoch 62: contrastive_pretrained_backbone_epoch62.pth
+   质量分数: 0.995
+   标准差: 0.019351
+   均值: -0.000500
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch62.pth
+
+36. Epoch 71: contrastive_pretrained_backbone_epoch71.pth
+   质量分数: 0.995
+   标准差: 0.019367
+   均值: -0.000496
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch71.pth
+
+37. Epoch 76: contrastive_pretrained_backbone_epoch76.pth
+   质量分数: 0.995
+   标准差: 0.019381
+   均值: -0.000497
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch76.pth
+
+38. Epoch 74: contrastive_pretrained_backbone_epoch74.pth
+   质量分数: 0.995
+   标准差: 0.019385
+   均值: -0.000495
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch74.pth
+
+39. Epoch 77: contrastive_pretrained_backbone_epoch77.pth
+   质量分数: 0.995
+   标准差: 0.019389
+   均值: -0.000497
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch77.pth
+
+40. Epoch 89: contrastive_pretrained_backbone_epoch89.pth
+   质量分数: 0.995
+   标准差: 0.019425
+   均值: -0.000494
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch89.pth
+
+41. Epoch 97: contrastive_pretrained_backbone_epoch97.pth
+   质量分数: 0.995
+   标准差: 0.019462
+   均值: -0.000494
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch97.pth
+
+42. Epoch 104: contrastive_pretrained_backbone_epoch104.pth
+   质量分数: 0.995
+   标准差: 0.019472
+   均值: -0.000494
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch104.pth
+
+43. Epoch 111: contrastive_pretrained_backbone_epoch111.pth
+   质量分数: 0.995
+   标准差: 0.019520
+   均值: -0.000495
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch111.pth
+
+44. Epoch 118: contrastive_pretrained_backbone_epoch118.pth
+   质量分数: 0.995
+   标准差: 0.019523
+   均值: -0.000492
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch118.pth
+
+45. Epoch 138: contrastive_pretrained_backbone_epoch138.pth
+   质量分数: 0.995
+   标准差: 0.019572
+   均值: -0.000491
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch138.pth
+
+46. Epoch 149: contrastive_pretrained_backbone_epoch149.pth
+   质量分数: 0.995
+   标准差: 0.019610
+   均值: -0.000491
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch149.pth
+
+47. Epoch 152: contrastive_pretrained_backbone_epoch152.pth
+   质量分数: 0.995
+   标准差: 0.019616
+   均值: -0.000493
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch152.pth
+
+48. Epoch 167: contrastive_pretrained_backbone_epoch167.pth
+   质量分数: 0.995
+   标准差: 0.019635
+   均值: -0.000490
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch167.pth
+
+49. Epoch 183: contrastive_pretrained_backbone_epoch183.pth
+   质量分数: 0.995
+   标准差: 0.019663
+   均值: -0.000491
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch183.pth
+
+50. Epoch 178: contrastive_pretrained_backbone_epoch178.pth
+   质量分数: 0.995
+   标准差: 0.019675
+   均值: -0.000491
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch178.pth
+
+51. Epoch 201: contrastive_pretrained_backbone_epoch201.pth
+   质量分数: 0.995
+   标准差: 0.019704
+   均值: -0.000492
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch201.pth
+
+52. Epoch 194: contrastive_pretrained_backbone_epoch194.pth
+   质量分数: 0.995
+   标准差: 0.019710
+   均值: -0.000491
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch194.pth
+
+53. Epoch 203: contrastive_pretrained_backbone_epoch203.pth
+   质量分数: 0.995
+   标准差: 0.019715
+   均值: -0.000493
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch203.pth
+
+54. Epoch 220: contrastive_pretrained_backbone_epoch220.pth
+   质量分数: 0.995
+   标准差: 0.019737
+   均值: -0.000494
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch220.pth
+
+55. Epoch 242: contrastive_pretrained_backbone_epoch242.pth
+   质量分数: 0.995
+   标准差: 0.019738
+   均值: -0.000495
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch242.pth
+
+56. Epoch 259: contrastive_pretrained_backbone_epoch259.pth
+   质量分数: 0.995
+   标准差: 0.019754
+   均值: -0.000495
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch259.pth
+
+57. Epoch 257: contrastive_pretrained_backbone_epoch257.pth
+   质量分数: 0.995
+   标准差: 0.019755
+   均值: -0.000495
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch257.pth
+
+58. Epoch 264: contrastive_pretrained_backbone_epoch264.pth
+   质量分数: 0.995
+   标准差: 0.019759
+   均值: -0.000493
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch264.pth
+
+59. Epoch 250: contrastive_pretrained_backbone_epoch250.pth
+   质量分数: 0.995
+   标准差: 0.019760
+   均值: -0.000495
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch250.pth
+
+60. Epoch 277: contrastive_pretrained_backbone_epoch277.pth
+   质量分数: 0.995
+   标准差: 0.019770
+   均值: -0.000494
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch277.pth
+
+61. Epoch 0: contrastive_pretrained_backbone.pth
+   质量分数: 0.995
+   标准差: 0.019773
+   均值: -0.000495
+   加载参数: 330
+   文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone.pth
 
 === 最佳推荐 ===
-   使用: contrastive_pretrained_backbone_epoch20.pth
-   命令: --model_path /home/wuyou/pspnet-pytorch/logs/contrastive_pretrained_backbone_epoch20.pth
+   使用: contrastive_pretrained_backbone_epoch1.pth
+   命令: --model_path /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch1.pth

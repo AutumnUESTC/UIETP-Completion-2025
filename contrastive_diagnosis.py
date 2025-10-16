@@ -1,3 +1,4 @@
+# utils/contrastive_analysis.py
 import os
 import torch
 import numpy as np
@@ -25,24 +26,31 @@ class ContrastiveAnalysisFixed:
         print("收集对比学习权重文件...")
         
         contrastive_files = []
-        for file in os.listdir(logs_dir):
-            if file.startswith('contrastive_pretrained_backbone') and file.endswith('.pth'):
-                # 提取epoch数字
-                if 'epoch' in file:
-                    epoch_str = file.split('epoch')[-1].replace('.pth', '')
-                    if epoch_str.isdigit():
-                        epoch = int(epoch_str)
+        
+        # 修改：递归搜索所有子目录中的权重文件
+        for root, dirs, files in os.walk(logs_dir):
+            for file in files:
+                if file.startswith('contrastive_pretrained_backbone') and file.endswith('.pth'):
+                    # 提取epoch数字
+                    if 'epoch' in file:
+                        epoch_str = file.split('epoch')[-1].replace('.pth', '')
+                        if epoch_str.isdigit():
+                            epoch = int(epoch_str)
+                        else:
+                            epoch = 0
                     else:
                         epoch = 0
-                else:
-                    epoch = 0
-                
-                file_path = os.path.join(logs_dir, file)
-                contrastive_files.append((epoch, file_path))
+                    
+                    file_path = os.path.join(root, file)
+                    contrastive_files.append((epoch, file_path))
         
         # 按epoch排序
         contrastive_files.sort()
         print(f"找到 {len(contrastive_files)} 个对比学习权重文件")
+        
+        # 打印找到的文件列表
+        for epoch, file_path in contrastive_files:
+            print(f"  - Epoch {epoch}: {file_path}")
         
         return contrastive_files
     
@@ -60,7 +68,7 @@ class ContrastiveAnalysisFixed:
             layer_stats = {}
             
             for key, tensor in checkpoint.items():
-                if tensor.dtype in [torch.float32, torch.float16]:
+                if isinstance(tensor, torch.Tensor) and tensor.dtype in [torch.float32, torch.float16]:
                     weights_flat = tensor.flatten().cpu().numpy()
                     all_weights.append(weights_flat)
                     
@@ -94,11 +102,11 @@ class ContrastiveAnalysisFixed:
     def test_model_loading(self, weight_path, backbone_type=1):
         """测试模型加载能力"""
         try:
-            from nets.pspnet import PSPNet
+            from nets.backbone_manager import UnifiedPSPNet
             
-            model = PSPNet(
+            model = UnifiedPSPNet(
                 num_classes=6,
-                backbone=backbone_type,
+                backbone_type=backbone_type,
                 downsample_factor=8,
                 pretrained=False
             )
@@ -110,7 +118,7 @@ class ContrastiveAnalysisFixed:
             matched_keys = []
             
             for k, v in checkpoint.items():
-                new_key = f"backbone.{k}"
+                new_key = f"backbone_manager.backbone.{k}"
                 if new_key in model_dict and model_dict[new_key].shape == v.shape:
                     model_dict[new_key] = v
                     matched_keys.append(new_key)
@@ -130,11 +138,30 @@ class ContrastiveAnalysisFixed:
         print("对比学习权重全面分析")
         print("=" * 60)
         
+        # 检查目录是否存在
+        if not os.path.exists(logs_dir):
+            print(f"错误: 指定的目录不存在: {logs_dir}")
+            print(f"当前工作目录: {os.getcwd()}")
+            return
+        
+        print(f"搜索目录: {logs_dir}")
+        
         # 1. 收集权重文件
         contrastive_files = self.collect_contrastive_weights(logs_dir)
         
         if not contrastive_files:
             print("未找到对比学习权重文件!")
+            # 列出目录内容以帮助调试
+            print(f"\n目录内容:")
+            for root, dirs, files in os.walk(logs_dir):
+                level = root.replace(logs_dir, '').count(os.sep)
+                indent = ' ' * 2 * level
+                print(f"{indent}{os.path.basename(root)}/")
+                subindent = ' ' * 2 * (level + 1)
+                for file in files[:10]:  # 只显示前10个文件
+                    print(f"{subindent}{file}")
+                if len(files) > 10:
+                    print(f"{subindent}... 还有 {len(files) - 10} 个文件")
             return
         
         # 2. 分析每个权重文件
@@ -162,6 +189,10 @@ class ContrastiveAnalysisFixed:
                 print(f"    {status}, 加载参数: {num_loaded}, 均值: {stats['mean']:.6f}, 标准差: {stats['std']:.6f}")
         
         self.results = analysis_results
+        
+        if not analysis_results:
+            print("没有找到可分析的权重文件!")
+            return
         
         # 3. 生成分析报告
         self.generate_analysis_report()
@@ -344,11 +375,12 @@ class ContrastiveAnalysisFixed:
 
 def main():
     """主函数"""
-    # 设置日志目录
-    logs_dir = "/home/wuyou/pspnet-pytorch/logs"
+    # 修改：使用您指定的权重目录
+    logs_dir = "/home/wuyou/pspnet-pytorch/logs/exp_20251015_155343/weights"
     
     if not os.path.exists(logs_dir):
         print(f"错误: 日志目录不存在: {logs_dir}")
+        print(f"当前工作目录: {os.getcwd()}")
         return
     
     # 创建分析器

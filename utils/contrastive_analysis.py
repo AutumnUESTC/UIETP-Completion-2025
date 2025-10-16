@@ -16,6 +16,9 @@ class ContrastiveAnalysisFixed:
         self.device = device
         self.output_dir = output_dir
         self.results = {}
+        self.best_epoch = None
+        self.best_metric = None
+        self.best_reason = ""
         
         # 创建输出目录
         os.makedirs(output_dir, exist_ok=True)
@@ -26,20 +29,21 @@ class ContrastiveAnalysisFixed:
         print("收集对比学习权重文件...")
         
         contrastive_files = []
-        for file in os.listdir(logs_dir):
-            if file.startswith('contrastive_pretrained_backbone') and file.endswith('.pth'):
-                # 提取epoch数字
-                if 'epoch' in file:
-                    epoch_str = file.split('epoch')[-1].replace('.pth', '')
-                    if epoch_str.isdigit():
-                        epoch = int(epoch_str)
+        for root, dirs, files in os.walk(logs_dir):
+            for file in files:
+                if file.startswith('contrastive_pretrained_backbone') and file.endswith('.pth'):
+                    # 提取epoch数字
+                    file_path = os.path.join(root, file)
+                    if 'epoch' in file:
+                        epoch_str = file.split('epoch')[-1].replace('.pth', '')
+                        if epoch_str.isdigit():
+                            epoch = int(epoch_str)
+                        else:
+                            epoch = 0
                     else:
                         epoch = 0
-                else:
-                    epoch = 0
-                
-                file_path = os.path.join(logs_dir, file)
-                contrastive_files.append((epoch, file_path))
+                    
+                    contrastive_files.append((epoch, file_path))
         
         # 按epoch排序
         contrastive_files.sort()
@@ -142,7 +146,7 @@ class ContrastiveAnalysisFixed:
         print("\n分析权重文件统计信息:")
         analysis_results = {}
         
-        for epoch, file_path in contrastive_files:
+        for epoch, file_path in tqdm(contrastive_files, desc="分析权重文件"):
             print(f"  Epoch {epoch}: {os.path.basename(file_path)}")
             
             stats = self.analyze_weight_statistics(file_path)
@@ -164,13 +168,70 @@ class ContrastiveAnalysisFixed:
         
         self.results = analysis_results
         
-        # 3. 生成分析报告
+        # 3. 选择最佳权重
+        self.select_best_weight()
+        
+        # 4. 生成分析报告
         self.generate_analysis_report()
         
-        # 4. 可视化结果
+        # 5. 可视化结果
         self.create_visualizations()
         
         print(f"\n分析完成! 结果保存在: {self.output_dir}")
+    
+    def select_best_weight(self):
+        """选择最佳权重"""
+        if not self.results:
+            return
+        
+        # 筛选可加载的文件
+        loadable_results = {epoch: data for epoch, data in self.results.items() if data['can_load']}
+        
+        if not loadable_results:
+            print("没有可加载的权重文件!")
+            return
+        
+        # 多种选择策略
+        candidates = []
+        
+        for epoch, data in loadable_results.items():
+            stats = data['stats']
+            std = stats['std']
+            mean = stats['mean']
+            num_params = stats['num_params']
+            
+            # 策略1: 标准差接近0.01 (适中的激活)
+            std_score = 1.0 / (1.0 + abs(std - 0.01))
+            
+            # 策略2: 均值接近0 (良好的初始化)
+            mean_score = 1.0 / (1.0 + abs(mean))
+            
+            # 策略3: 参数数量多 (完整的模型)
+            param_score = min(1.0, num_params / 1000000)  # 假设100万参数为基准
+            
+            # 策略4: epoch数较高 (训练更充分)
+            epoch_score = min(1.0, epoch / 500)  # 假设500 epoch为基准
+            
+            # 综合分数
+            total_score = std_score * 0.4 + mean_score * 0.3 + param_score * 0.2 + epoch_score * 0.1
+            
+            candidates.append((epoch, data, total_score, std_score, mean_score))
+        
+        # 按综合分数排序
+        candidates.sort(key=lambda x: x[2], reverse=True)
+        
+        if candidates:
+            best_epoch, best_data, best_score, std_score, mean_score = candidates[0]
+            self.best_epoch = best_epoch
+            self.best_metric = best_score
+            self.best_reason = f"综合评分最高 (std_score: {std_score:.3f}, mean_score: {mean_score:.3f})"
+            
+            print(f"\n最佳权重选择: Epoch {best_epoch}")
+            print(f"  文件: {os.path.basename(best_data['file_path'])}")
+            print(f"  综合评分: {best_score:.3f}")
+            print(f"  标准差: {best_data['stats']['std']:.6f}")
+            print(f"  均值: {best_data['stats']['mean']:.6f}")
+            print(f"  加载参数: {best_data['num_loaded']}")
     
     def generate_analysis_report(self):
         """生成分析报告"""
@@ -187,17 +248,16 @@ class ContrastiveAnalysisFixed:
             loadable_files = [epoch for epoch, data in self.results.items() if data['can_load']]
             f.write(f"可成功加载的文件: {len(loadable_files)}\n")
             
-            if loadable_files:
-                f.write("推荐使用的权重文件 (按标准差排序):\n")
-                # 按标准差排序 (适中的标准差通常更好)
-                sorted_results = sorted(
-                    [(epoch, data) for epoch, data in self.results.items() if data['can_load']],
-                    key=lambda x: abs(x[1]['stats']['std'] - 0.01)  # 距离理想标准差0.01的差距
-                )
-                
-                for i, (epoch, data) in enumerate(sorted_results[:5]):  # 显示前5个
-                    f.write(f"  {i+1}. Epoch {epoch}: {os.path.basename(data['file_path'])}\n")
-                    f.write(f"     标准差: {data['stats']['std']:.6f}, 加载参数: {data['num_loaded']}\n")
+            if self.best_epoch is not None:
+                f.write(f"\n=== 最佳推荐 ===\n")
+                best_data = self.results[self.best_epoch]
+                f.write(f"Epoch {self.best_epoch}: {os.path.basename(best_data['file_path'])}\n")
+                f.write(f"选择理由: {self.best_reason}\n")
+                f.write(f"综合评分: {self.best_metric:.3f}\n")
+                f.write(f"标准差: {best_data['stats']['std']:.6f}\n")
+                f.write(f"均值: {best_data['stats']['mean']:.6f}\n")
+                f.write(f"加载参数: {best_data['num_loaded']}\n")
+                f.write(f"文件路径: {best_data['file_path']}\n")
             
             f.write("\n详细统计:\n")
             for epoch, data in sorted(self.results.items()):
@@ -228,7 +288,7 @@ class ContrastiveAnalysisFixed:
         plt.rcParams['axes.unicode_minus'] = False
         
         # 1. 权重统计变化图
-        plt.figure(figsize=(12, 8))
+        plt.figure(figsize=(15, 10))
         
         plt.subplot(2, 2, 1)
         plt.plot(epochs, means, 'bo-', linewidth=2, markersize=6)
@@ -265,13 +325,13 @@ class ContrastiveAnalysisFixed:
                    dpi=300, bbox_inches='tight')
         plt.close()
         
-        # 2. 创建推荐图表
+        # 2. 创建推荐图表 - 修复拥堵问题
         self.create_recommendation_chart()
         
         print(f"可视化图表已保存到: {self.output_dir}")
     
     def create_recommendation_chart(self):
-        """创建推荐图表"""
+        """创建推荐图表 - 修复版本"""
         if not self.results:
             return
         
@@ -281,44 +341,149 @@ class ContrastiveAnalysisFixed:
         if not loadable_results:
             return
         
-        # 按标准差质量排序 (距离理想标准差0.01的差距)
-        sorted_results = sorted(
-            loadable_results.items(),
-            key=lambda x: abs(x[1]['stats']['std'] - 0.01)
-        )
+        # 计算质量分数
+        quality_data = []
+        for epoch, data in loadable_results.items():
+            stats = data['stats']
+            std = stats['std']
+            mean = stats['mean']
+            num_params = stats['num_params']
+            
+            # 质量评分标准
+            std_quality = 1.0 / (1.0 + abs(std - 0.01))  # 标准差接近0.01为佳
+            mean_quality = 1.0 / (1.0 + abs(mean))       # 均值接近0为佳
+            param_quality = min(1.0, num_params / 1000000)  # 参数完整性
+            
+            # 综合质量分数
+            quality_score = std_quality * 0.5 + mean_quality * 0.3 + param_quality * 0.2
+            
+            quality_data.append({
+                'epoch': epoch,
+                'data': data,
+                'quality_score': quality_score,
+                'std': std,
+                'mean': mean,
+                'num_loaded': data['num_loaded']
+            })
         
-        epochs = [epoch for epoch, _ in sorted_results]
-        stds = [data['stats']['std'] for _, data in sorted_results]
-        quality_scores = [1.0 / (1.0 + abs(std - 0.01)) for std in stds]  # 质量分数
+        # 按质量分数排序
+        quality_data.sort(key=lambda x: x['quality_score'], reverse=True)
         
-        plt.figure(figsize=(10, 6))
+        # 限制显示数量，避免拥堵
+        max_display = min(15, len(quality_data))
+        display_data = quality_data[:max_display]
         
-        # 创建条形图
-        bars = plt.bar(range(len(epochs)), quality_scores, 
-                      color=plt.cm.viridis(quality_scores))
+        # 创建图表
+        plt.figure(figsize=(14, 8))
         
-        plt.xlabel('Epoch (Sorted by Recommendation)')
-        plt.ylabel('Quality Score')
-        plt.title('Contrastive Learning Weight Quality Recommendation\n(Based on how close std is to 0.01)')
+        # 使用子图来分散信息
+        ax1 = plt.subplot(1, 2, 1)
         
-        # 添加数值标签
-        for i, (bar, epoch, std, score) in enumerate(zip(bars, epochs, stds, quality_scores)):
-            plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
-                    f'Epoch{epoch}\nstd:{std:.3f}', ha='center', va='bottom', fontsize=8)
+        # 质量分数条形图
+        epochs_display = [f'E{item["epoch"]}' for item in display_data]
+        quality_scores = [item['quality_score'] for item in display_data]
+        stds_display = [item['std'] for item in display_data]
         
-        plt.xticks(range(len(epochs)), [f'E{epoch}' for epoch in epochs])
-        plt.grid(True, alpha=0.3, axis='y')
-        plt.ylim(0, max(quality_scores) * 1.2)
+        # 使用颜色渐变
+        colors = plt.cm.viridis(np.linspace(0.2, 0.8, len(display_data)))
+        
+        bars = ax1.barh(range(len(display_data)), quality_scores, color=colors, alpha=0.8)
+        ax1.set_yticks(range(len(display_data)))
+        ax1.set_yticklabels(epochs_display)
+        ax1.set_xlabel('Quality Score')
+        ax1.set_title('Contrastive Weight Quality Ranking\n(Higher is Better)')
+        
+        # 在条形上添加数值
+        for i, (bar, score, std) in enumerate(zip(bars, quality_scores, stds_display)):
+            width = bar.get_width()
+            ax1.text(width + 0.01, bar.get_y() + bar.get_height()/2, 
+                    f'{score:.3f}', ha='left', va='center', fontsize=9)
+        
+        # 第二个子图：详细信息
+        ax2 = plt.subplot(1, 2, 2)
+        
+        # 创建详细信息的文本
+        info_text = "Top Recommendations:\n\n"
+        for i, item in enumerate(display_data[:8]):  # 显示前8个的详细信息
+            info_text += f"{i+1}. Epoch {item['epoch']}:\n"
+            info_text += f"   Score: {item['quality_score']:.3f}\n"
+            info_text += f"   Std: {item['std']:.4f}\n"
+            info_text += f"   Params: {item['num_loaded']}\n\n"
+        
+        ax2.text(0.1, 0.95, info_text, transform=ax2.transAxes, fontsize=10,
+                verticalalignment='top', fontfamily='monospace')
+        ax2.axis('off')
+        ax2.set_title('Detailed Recommendations')
+        
+        # 标记最佳选择
+        if self.best_epoch is not None:
+            best_idx = None
+            for i, item in enumerate(display_data):
+                if item['epoch'] == self.best_epoch:
+                    best_idx = i
+                    break
+            
+            if best_idx is not None:
+                ax1.text(0.02, best_idx, '★', transform=ax1.get_yaxis_transform(), 
+                        fontsize=20, color='red', weight='bold')
         
         plt.tight_layout()
         plt.savefig(os.path.join(self.output_dir, 'weight_recommendations.png'), 
                    dpi=300, bbox_inches='tight')
         plt.close()
         
+        # 3. 创建epoch趋势图
+        self.create_epoch_trend_chart(loadable_results)
+        
         # 保存推荐结果
-        self.save_recommendations(sorted_results)
+        self.save_recommendations(quality_data)
     
-    def save_recommendations(self, sorted_results):
+    def create_epoch_trend_chart(self, loadable_results):
+        """创建epoch趋势图"""
+        epochs = sorted(loadable_results.keys())
+        stds = [loadable_results[epoch]['stats']['std'] for epoch in epochs]
+        means = [loadable_results[epoch]['stats']['mean'] for epoch in epochs]
+        num_loaded = [loadable_results[epoch]['num_loaded'] for epoch in epochs]
+        
+        plt.figure(figsize=(12, 8))
+        
+        # 创建三个子图
+        plt.subplot(3, 1, 1)
+        plt.plot(epochs, stds, 'g-o', linewidth=2, markersize=4)
+        plt.ylabel('Weight Std')
+        plt.title('Training Progress Over Epochs')
+        plt.grid(True, alpha=0.3)
+        
+        plt.subplot(3, 1, 2)
+        plt.plot(epochs, means, 'b-o', linewidth=2, markersize=4)
+        plt.ylabel('Weight Mean')
+        plt.grid(True, alpha=0.3)
+        
+        plt.subplot(3, 1, 3)
+        plt.plot(epochs, num_loaded, 'r-o', linewidth=2, markersize=4)
+        plt.xlabel('Epoch')
+        plt.ylabel('Loaded Params')
+        plt.grid(True, alpha=0.3)
+        
+        # 标记最佳epoch
+        if self.best_epoch in epochs:
+            best_idx = epochs.index(self.best_epoch)
+            plt.subplot(3, 1, 1)
+            plt.axvline(x=self.best_epoch, color='red', linestyle='--', alpha=0.7, label=f'Best: E{self.best_epoch}')
+            plt.legend()
+            
+            plt.subplot(3, 1, 2)
+            plt.axvline(x=self.best_epoch, color='red', linestyle='--', alpha=0.7)
+            
+            plt.subplot(3, 1, 3)
+            plt.axvline(x=self.best_epoch, color='red', linestyle='--', alpha=0.7)
+        
+        plt.tight_layout()
+        plt.savefig(os.path.join(self.output_dir, 'training_trends.png'), 
+                   dpi=300, bbox_inches='tight')
+        plt.close()
+    
+    def save_recommendations(self, quality_data):
         """保存推荐结果"""
         rec_path = os.path.join(self.output_dir, 'recommendations.txt')
         
@@ -327,15 +492,23 @@ class ContrastiveAnalysisFixed:
             f.write("=" * 40 + "\n\n")
             f.write("推荐顺序 (从最佳到最差):\n\n")
             
-            for i, (epoch, data) in enumerate(sorted_results):
+            for i, item in enumerate(quality_data):
+                epoch = item['epoch']
+                data = item['data']
+                score = item['quality_score']
+                std = item['std']
+                
                 f.write(f"{i+1}. Epoch {epoch}: {os.path.basename(data['file_path'])}\n")
-                f.write(f"   标准差: {data['stats']['std']:.6f}\n")
+                f.write(f"   质量分数: {score:.3f}\n")
+                f.write(f"   标准差: {std:.6f}\n")
                 f.write(f"   均值: {data['stats']['mean']:.6f}\n")
                 f.write(f"   加载参数: {data['num_loaded']}\n")
                 f.write(f"   文件路径: {data['file_path']}\n\n")
             
-            if sorted_results:
-                best_epoch, best_data = sorted_results[0]
+            if quality_data:
+                best_item = quality_data[0]
+                best_epoch = best_item['epoch']
+                best_data = best_item['data']
                 f.write("=== 最佳推荐 ===\n")
                 f.write(f"   使用: {os.path.basename(best_data['file_path'])}\n")
                 f.write(f"   命令: --model_path {best_data['file_path']}\n")
@@ -371,16 +544,12 @@ def main():
         print(f"可加载文件: {loadable_count}")
         print(f"不可加载文件: {len(analyzer.results) - loadable_count}")
         
-        if loadable_count > 0:
-            # 找到最佳推荐
-            loadable_results = {epoch: data for epoch, data in analyzer.results.items() if data['can_load']}
-            best_epoch = min(loadable_results.keys(), 
-                           key=lambda x: abs(loadable_results[x]['stats']['std'] - 0.01))
-            
-            best_file = loadable_results[best_epoch]['file_path']
+        if loadable_count > 0 and analyzer.best_epoch is not None:
+            best_file = analyzer.results[analyzer.best_epoch]['file_path']
             print(f"\n=== 推荐使用 ===: {os.path.basename(best_file)}")
             print(f"   路径: {best_file}")
-            print(f"   标准差: {loadable_results[best_epoch]['stats']['std']:.6f}")
+            print(f"   标准差: {analyzer.results[analyzer.best_epoch]['stats']['std']:.6f}")
+            print(f"   选择理由: {analyzer.best_reason}")
     else:
         print("没有找到有效的对比学习权重文件")
 

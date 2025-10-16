@@ -1,110 +1,567 @@
 对比学习预训练权重分析报告
 ==================================================
 
-分析时间: 2025-10-15T00:01:54
-总权重文件数: 10
+分析时间: 2025-10-16T13:54:33
+总权重文件数: 61
 
-可成功加载的文件: 10
-推荐使用的权重文件 (按标准差排序):
-  1. Epoch 20: contrastive_pretrained_backbone_epoch20.pth
-     标准差: 0.460350, 加载参数: 313
-  2. Epoch 80: contrastive_pretrained_backbone_epoch80.pth
-     标准差: 0.866364, 加载参数: 313
-  3. Epoch 100: contrastive_pretrained_backbone_epoch100.pth
-     标准差: 0.868650, 加载参数: 313
-  4. Epoch 40: contrastive_pretrained_backbone_epoch40.pth
-     标准差: 0.888340, 加载参数: 313
-  5. Epoch 60: contrastive_pretrained_backbone_epoch60.pth
-     标准差: 0.911379, 加载参数: 313
+可成功加载的文件: 61
+
+=== 最佳推荐 ===
+Epoch 277: contrastive_pretrained_backbone_epoch277.pth
+选择理由: 综合评分最高 (std_score: 0.990, mean_score: 1.000)
+综合评分: 0.951
+标准差: 0.019770
+均值: -0.000494
+加载参数: 330
+文件路径: /home/wuyou/pspnet-pytorch/logs/exp_20251016_095016/weights/contrastive_pretrained_backbone_epoch277.pth
 
 详细统计:
 
+Epoch 0: contrastive_pretrained_backbone.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000495
+  权重标准差: 0.019773
+  权重范围: [-2.740975, 3.248460]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 1: contrastive_pretrained_backbone_epoch1.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000492
+  权重标准差: 0.019088
+  权重范围: [-2.323121, 3.412945]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 2: contrastive_pretrained_backbone_epoch2.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000492
+  权重标准差: 0.019097
+  权重范围: [-2.313818, 3.443670]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 3: contrastive_pretrained_backbone_epoch3.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000496
+  权重标准差: 0.019107
+  权重范围: [-2.247844, 3.325979]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 4: contrastive_pretrained_backbone_epoch4.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000500
+  权重标准差: 0.019126
+  权重范围: [-2.264943, 3.644927]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 5: contrastive_pretrained_backbone_epoch5.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000500
+  权重标准差: 0.019125
+  权重范围: [-2.204166, 3.809085]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 7: contrastive_pretrained_backbone_epoch7.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000502
+  权重标准差: 0.019131
+  权重范围: [-2.257093, 3.609908]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 8: contrastive_pretrained_backbone_epoch8.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000503
+  权重标准差: 0.019159
+  权重范围: [-2.303840, 3.693725]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 9: contrastive_pretrained_backbone_epoch9.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000504
+  权重标准差: 0.019149
+  权重范围: [-2.260527, 3.586129]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 10: contrastive_pretrained_backbone_epoch10.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000504
+  权重标准差: 0.019136
+  权重范围: [-2.336952, 3.688133]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 12: contrastive_pretrained_backbone_epoch12.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000505
+  权重标准差: 0.019164
+  权重范围: [-2.319928, 3.584987]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 14: contrastive_pretrained_backbone_epoch14.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000511
+  权重标准差: 0.019157
+  权重范围: [-2.377400, 3.299555]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 15: contrastive_pretrained_backbone_epoch15.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000510
+  权重标准差: 0.019159
+  权重范围: [-2.347086, 3.297471]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 16: contrastive_pretrained_backbone_epoch16.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000510
+  权重标准差: 0.019183
+  权重范围: [-2.361828, 3.427463]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 17: contrastive_pretrained_backbone_epoch17.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000510
+  权重标准差: 0.019173
+  权重范围: [-2.400388, 3.498783]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 18: contrastive_pretrained_backbone_epoch18.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000512
+  权重标准差: 0.019171
+  权重范围: [-2.371688, 3.514880]
+  总参数数量: 23685312
+  层数: 275
+
 Epoch 20: contrastive_pretrained_backbone_epoch20.pth
   可加载: True
-  加载参数数量: 313
-  权重均值: -0.001428
-  权重标准差: 0.460350
-  权重范围: [-15.598484, 261.220551]
+  加载参数数量: 330
+  权重均值: -0.000508
+  权重标准差: 0.019188
+  权重范围: [-2.313529, 3.743082]
   总参数数量: 23685312
   层数: 275
 
-Epoch 40: contrastive_pretrained_backbone_epoch40.pth
+Epoch 22: contrastive_pretrained_backbone_epoch22.pth
   可加载: True
-  加载参数数量: 313
-  权重均值: 0.000079
-  权重标准差: 0.888340
-  权重范围: [-23.678942, 851.331970]
+  加载参数数量: 330
+  权重均值: -0.000508
+  权重标准差: 0.019179
+  权重范围: [-2.259845, 3.587974]
   总参数数量: 23685312
   层数: 275
 
-Epoch 60: contrastive_pretrained_backbone_epoch60.pth
+Epoch 24: contrastive_pretrained_backbone_epoch24.pth
   可加载: True
-  加载参数数量: 313
-  权重均值: -0.000119
-  权重标准差: 0.911379
-  权重范围: [-25.238035, 621.512573]
+  加载参数数量: 330
+  权重均值: -0.000510
+  权重标准差: 0.019198
+  权重范围: [-2.305512, 3.252553]
   总参数数量: 23685312
   层数: 275
 
-Epoch 80: contrastive_pretrained_backbone_epoch80.pth
+Epoch 26: contrastive_pretrained_backbone_epoch26.pth
   可加载: True
-  加载参数数量: 313
-  权重均值: -0.000371
-  权重标准差: 0.866364
-  权重范围: [-24.433498, 583.771118]
+  加载参数数量: 330
+  权重均值: -0.000510
+  权重标准差: 0.019213
+  权重范围: [-2.306658, 3.125515]
   总参数数量: 23685312
   层数: 275
 
-Epoch 100: contrastive_pretrained_backbone_epoch100.pth
+Epoch 27: contrastive_pretrained_backbone_epoch27.pth
   可加载: True
-  加载参数数量: 313
-  权重均值: -0.000386
-  权重标准差: 0.868650
-  权重范围: [-23.769838, 575.824158]
+  加载参数数量: 330
+  权重均值: -0.000512
+  权重标准差: 0.019212
+  权重范围: [-2.345858, 2.955722]
   总参数数量: 23685312
   层数: 275
 
-Epoch 120: contrastive_pretrained_backbone_epoch120.pth
+Epoch 29: contrastive_pretrained_backbone_epoch29.pth
   可加载: True
-  加载参数数量: 313
-  权重均值: 0.001336
-  权重标准差: 1.167324
-  权重范围: [-32.028599, 899.946228]
+  加载参数数量: 330
+  权重均值: -0.000510
+  权重标准差: 0.019209
+  权重范围: [-2.388282, 2.938507]
   总参数数量: 23685312
   层数: 275
 
-Epoch 140: contrastive_pretrained_backbone_epoch140.pth
+Epoch 30: contrastive_pretrained_backbone_epoch30.pth
   可加载: True
-  加载参数数量: 313
-  权重均值: 0.003309
-  权重标准差: 1.455448
-  权重范围: [-35.626408, 1093.278809]
+  加载参数数量: 330
+  权重均值: -0.000510
+  权重标准差: 0.019226
+  权重范围: [-2.403067, 3.025322]
   总参数数量: 23685312
   层数: 275
 
-Epoch 160: contrastive_pretrained_backbone_epoch160.pth
+Epoch 31: contrastive_pretrained_backbone_epoch31.pth
   可加载: True
-  加载参数数量: 313
-  权重均值: 0.004774
-  权重标准差: 1.613336
-  权重范围: [-38.218227, 1157.401245]
+  加载参数数量: 330
+  权重均值: -0.000510
+  权重标准差: 0.019238
+  权重范围: [-2.390798, 2.964702]
   总参数数量: 23685312
   层数: 275
 
-Epoch 180: contrastive_pretrained_backbone_epoch180.pth
+Epoch 34: contrastive_pretrained_backbone_epoch34.pth
   可加载: True
-  加载参数数量: 313
-  权重均值: 0.006067
-  权重标准差: 1.702301
-  权重范围: [-35.912998, 1137.442871]
+  加载参数数量: 330
+  权重均值: -0.000507
+  权重标准差: 0.019256
+  权重范围: [-2.356107, 3.033016]
   总参数数量: 23685312
   层数: 275
 
-Epoch 200: contrastive_pretrained_backbone_epoch200.pth
+Epoch 37: contrastive_pretrained_backbone_epoch37.pth
   可加载: True
-  加载参数数量: 313
-  权重均值: 0.006262
-  权重标准差: 1.707838
-  权重范围: [-40.192944, 1121.246948]
+  加载参数数量: 330
+  权重均值: -0.000506
+  权重标准差: 0.019251
+  权重范围: [-2.418656, 3.190448]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 38: contrastive_pretrained_backbone_epoch38.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000505
+  权重标准差: 0.019260
+  权重范围: [-2.419519, 2.888590]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 42: contrastive_pretrained_backbone_epoch42.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000505
+  权重标准差: 0.019280
+  权重范围: [-2.478865, 3.060064]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 45: contrastive_pretrained_backbone_epoch45.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000506
+  权重标准差: 0.019298
+  权重范围: [-2.494566, 3.062819]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 47: contrastive_pretrained_backbone_epoch47.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000505
+  权重标准差: 0.019300
+  权重范围: [-2.492531, 2.822786]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 49: contrastive_pretrained_backbone_epoch49.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000502
+  权重标准差: 0.019317
+  权重范围: [-2.455948, 2.982779]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 54: contrastive_pretrained_backbone_epoch54.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000504
+  权重标准差: 0.019336
+  权重范围: [-2.425040, 3.036136]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 59: contrastive_pretrained_backbone_epoch59.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000499
+  权重标准差: 0.019343
+  权重范围: [-2.403569, 3.101343]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 62: contrastive_pretrained_backbone_epoch62.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000500
+  权重标准差: 0.019351
+  权重范围: [-2.471523, 3.021553]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 64: contrastive_pretrained_backbone_epoch64.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000500
+  权重标准差: 0.019335
+  权重范围: [-2.514519, 2.729012]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 65: contrastive_pretrained_backbone_epoch65.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000499
+  权重标准差: 0.019351
+  权重范围: [-2.488705, 2.810883]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 71: contrastive_pretrained_backbone_epoch71.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000496
+  权重标准差: 0.019367
+  权重范围: [-2.462794, 2.997190]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 74: contrastive_pretrained_backbone_epoch74.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000495
+  权重标准差: 0.019385
+  权重范围: [-2.514338, 3.062418]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 76: contrastive_pretrained_backbone_epoch76.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000497
+  权重标准差: 0.019381
+  权重范围: [-2.499479, 2.892652]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 77: contrastive_pretrained_backbone_epoch77.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000497
+  权重标准差: 0.019389
+  权重范围: [-2.540611, 3.161962]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 89: contrastive_pretrained_backbone_epoch89.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000494
+  权重标准差: 0.019425
+  权重范围: [-2.568158, 2.809812]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 97: contrastive_pretrained_backbone_epoch97.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000494
+  权重标准差: 0.019462
+  权重范围: [-2.537674, 3.309333]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 104: contrastive_pretrained_backbone_epoch104.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000494
+  权重标准差: 0.019472
+  权重范围: [-2.486807, 3.051739]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 111: contrastive_pretrained_backbone_epoch111.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000495
+  权重标准差: 0.019520
+  权重范围: [-2.626002, 3.390594]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 118: contrastive_pretrained_backbone_epoch118.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000492
+  权重标准差: 0.019523
+  权重范围: [-2.611294, 3.320180]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 138: contrastive_pretrained_backbone_epoch138.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000491
+  权重标准差: 0.019572
+  权重范围: [-2.596716, 2.968369]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 149: contrastive_pretrained_backbone_epoch149.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000491
+  权重标准差: 0.019610
+  权重范围: [-2.566245, 3.021648]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 152: contrastive_pretrained_backbone_epoch152.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000493
+  权重标准差: 0.019616
+  权重范围: [-2.605017, 3.109360]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 167: contrastive_pretrained_backbone_epoch167.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000490
+  权重标准差: 0.019635
+  权重范围: [-2.714027, 2.827470]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 178: contrastive_pretrained_backbone_epoch178.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000491
+  权重标准差: 0.019675
+  权重范围: [-2.708713, 3.208918]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 183: contrastive_pretrained_backbone_epoch183.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000491
+  权重标准差: 0.019663
+  权重范围: [-2.718310, 3.233369]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 194: contrastive_pretrained_backbone_epoch194.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000491
+  权重标准差: 0.019710
+  权重范围: [-2.673374, 3.647057]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 201: contrastive_pretrained_backbone_epoch201.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000492
+  权重标准差: 0.019704
+  权重范围: [-2.665846, 3.425082]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 203: contrastive_pretrained_backbone_epoch203.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000493
+  权重标准差: 0.019715
+  权重范围: [-2.664433, 3.519157]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 220: contrastive_pretrained_backbone_epoch220.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000494
+  权重标准差: 0.019737
+  权重范围: [-2.746774, 3.358925]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 242: contrastive_pretrained_backbone_epoch242.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000495
+  权重标准差: 0.019738
+  权重范围: [-2.728250, 3.152974]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 250: contrastive_pretrained_backbone_epoch250.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000495
+  权重标准差: 0.019760
+  权重范围: [-2.687754, 3.233427]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 257: contrastive_pretrained_backbone_epoch257.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000495
+  权重标准差: 0.019755
+  权重范围: [-2.704845, 3.257189]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 259: contrastive_pretrained_backbone_epoch259.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000495
+  权重标准差: 0.019754
+  权重范围: [-2.685336, 3.234620]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 264: contrastive_pretrained_backbone_epoch264.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000493
+  权重标准差: 0.019759
+  权重范围: [-2.654908, 3.293746]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 277: contrastive_pretrained_backbone_epoch277.pth
+  可加载: True
+  加载参数数量: 330
+  权重均值: -0.000494
+  权重标准差: 0.019770
+  权重范围: [-2.641478, 3.349423]
   总参数数量: 23685312
   层数: 275
