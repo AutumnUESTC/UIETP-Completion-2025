@@ -1,0 +1,110 @@
+对比学习预训练权重分析报告
+==================================================
+
+分析时间: 2025-10-15T00:01:54
+总权重文件数: 10
+
+可成功加载的文件: 10
+推荐使用的权重文件 (按标准差排序):
+  1. Epoch 20: contrastive_pretrained_backbone_epoch20.pth
+     标准差: 0.460350, 加载参数: 313
+  2. Epoch 80: contrastive_pretrained_backbone_epoch80.pth
+     标准差: 0.866364, 加载参数: 313
+  3. Epoch 100: contrastive_pretrained_backbone_epoch100.pth
+     标准差: 0.868650, 加载参数: 313
+  4. Epoch 40: contrastive_pretrained_backbone_epoch40.pth
+     标准差: 0.888340, 加载参数: 313
+  5. Epoch 60: contrastive_pretrained_backbone_epoch60.pth
+     标准差: 0.911379, 加载参数: 313
+
+详细统计:
+
+Epoch 20: contrastive_pretrained_backbone_epoch20.pth
+  可加载: True
+  加载参数数量: 313
+  权重均值: -0.001428
+  权重标准差: 0.460350
+  权重范围: [-15.598484, 261.220551]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 40: contrastive_pretrained_backbone_epoch40.pth
+  可加载: True
+  加载参数数量: 313
+  权重均值: 0.000079
+  权重标准差: 0.888340
+  权重范围: [-23.678942, 851.331970]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 60: contrastive_pretrained_backbone_epoch60.pth
+  可加载: True
+  加载参数数量: 313
+  权重均值: -0.000119
+  权重标准差: 0.911379
+  权重范围: [-25.238035, 621.512573]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 80: contrastive_pretrained_backbone_epoch80.pth
+  可加载: True
+  加载参数数量: 313
+  权重均值: -0.000371
+  权重标准差: 0.866364
+  权重范围: [-24.433498, 583.771118]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 100: contrastive_pretrained_backbone_epoch100.pth
+  可加载: True
+  加载参数数量: 313
+  权重均值: -0.000386
+  权重标准差: 0.868650
+  权重范围: [-23.769838, 575.824158]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 120: contrastive_pretrained_backbone_epoch120.pth
+  可加载: True
+  加载参数数量: 313
+  权重均值: 0.001336
+  权重标准差: 1.167324
+  权重范围: [-32.028599, 899.946228]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 140: contrastive_pretrained_backbone_epoch140.pth
+  可加载: True
+  加载参数数量: 313
+  权重均值: 0.003309
+  权重标准差: 1.455448
+  权重范围: [-35.626408, 1093.278809]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 160: contrastive_pretrained_backbone_epoch160.pth
+  可加载: True
+  加载参数数量: 313
+  权重均值: 0.004774
+  权重标准差: 1.613336
+  权重范围: [-38.218227, 1157.401245]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 180: contrastive_pretrained_backbone_epoch180.pth
+  可加载: True
+  加载参数数量: 313
+  权重均值: 0.006067
+  权重标准差: 1.702301
+  权重范围: [-35.912998, 1137.442871]
+  总参数数量: 23685312
+  层数: 275
+
+Epoch 200: contrastive_pretrained_backbone_epoch200.pth
+  可加载: True
+  加载参数数量: 313
+  权重均值: 0.006262
+  权重标准差: 1.707838
+  权重范围: [-40.192944, 1121.246948]
+  总参数数量: 23685312
+  层数: 275

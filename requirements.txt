@@ -1,0 +1,10 @@
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+numpy<2.3.0,>=1.26.0
+opencv-python>=4.5.0
+Pillow>=8.3.0
+matplotlib>=3.3.0
+scipy>=1.7.0
+tqdm>=4.60.0
+tensorboard>=2.7.0

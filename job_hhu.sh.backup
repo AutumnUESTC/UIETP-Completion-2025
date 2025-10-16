@@ -1,0 +1,42 @@
+#!/bin/bash
+#SBATCH -J hh #作业名字（⾮必需）
+#SBATCH -o /share/home/hhu/result/%j.out.txt #标准输出⽂件（⾮必需）
+#SBATCH -e /share/home/hhu/result/%j.err.txt #标准错误输出⽂件（⾮必需）
+#SBATCH -w c08 #指定运⾏主机
+#SBATCH -p gpu #运⾏分区（⾮必需，如不指定分配到默认分区）
+#SBATCH -n 1 #申请cpu数量（⾮必需，如不指定默认为1）
+#SBATCH --gres=gpu:2
+
+#---------以下是运⾏tensorflow的内容----------------
+
+#载⼊conda环境变量
+source /share/home/byyang/anaconda3/etc/profile.d/conda.sh
+#source /share/apps/anaconda3/etc/profile.d/conda.sh
+
+#激活名为tensorflow的conda环境
+conda activate PSPNet-main
+#conda activate pytorch-1.11
+
+#运⾏python程序
+
+#GPU driver version: 510.108.03
+#CUDA version: V11.1.105
+#Build cuda_11.1.TC455_06.29190527_0
+#The number of cores is: 2
+#pytroch version: 1.11.0
+
+#python3 /share/home/byyang/icedCamera/code/utils/showModel.py
+
+# CUDA_VISIBLE_DEVICES=0,1 python3 -m torch.distributed.launch --nproc_per_node=2 train.py
+# backbone cuda:0
+# embedding cuda:1
+# PSPModel cuda:0
+# encoder cuda:0
+
+#export CUDA_VISIBLE_DEVICES=0,1,2,3
+export CUDA_VISIBLE_DEVICES=0,1
+LD_LIBRARY_PATH=/share/home/byyang/anaconda3/envs/PSPNet-main/lib
+python /share/home/hhu/code/train_hhu.py
+#python /share/home/byyang/icedCamera/code/get_miou.py
+#python3 -m torch.distributed.launch --nproc_per_node=2 /share/home/byyang/icedCamera/code/train.py
+#python3 predict.py
